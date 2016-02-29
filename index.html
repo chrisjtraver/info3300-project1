@@ -25,7 +25,7 @@ var svg = d3.select("body").append("svg")
 
   d3.json("nyc.json", function(error, nyb) {
 
-  	console.log(nyb)
+  	//console.log(nyb)
 
     var projection = d3.geo.mercator()
   					.center([-73.94, 40.70])
@@ -45,6 +45,15 @@ var svg = d3.select("body").append("svg")
 		.attr("class", function(d){ return d.properties.name; })
 		.attr("d", path);
 
+	var lonlat = [-73.9794234, 40.7527262];
+    var xy = projection(lonlat)
+    svg.append("circle")
+    .attr({
+	   cx: xy[0],
+	   cy: xy[1],
+	   r: 5,
+	   fill: "blue"
+	})
 	});
 
 </script>
