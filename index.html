@@ -1,32 +1,32 @@
-
 <!DOCTYPE html>
 <meta charset="utf-8">
-
-<style>
-#boroughs {
-  stroke: black;
-	stroke-width: 1px;
-	fill: #ccc;
-}
-</style>
-
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<head>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> <!--D3 Library Import-->
+  <link rel="stylesheet" type="text/css" href="style.css"> <!--External CSS Import-->
+</head>
 
 <body>
 
 <script>
+  
+<!-- ////////////////////////////////////////// IMPORT CSV DATA FILE ///////////////////////////////////////////////////-->
 
+//Code to import CSV goes here
+
+<!-- ////////////////////////////////////////// NYC MAP ///////////////////////////////////////////////////-->
+
+//Attributes for NYC Map
 var width = 900,
    height = 800;
 
+//Create NYC Map
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+  //Map Projection Function
   d3.json("nyc.json", function(error, nyb) {
-
-  	//console.log(nyb)
-
+	
     var projection = d3.geo.mercator()
   					.center([-73.94, 40.70])
   					.scale(80000)
@@ -44,7 +44,8 @@ var svg = d3.select("body").append("svg")
 		.enter().append("path")
 		.attr("class", function(d){ return d.properties.name; })
 		.attr("d", path);
-
+	
+	//Sample Circle Point
 	var lonlat = [-73.9794234, 40.7527262];
     var xy = projection(lonlat)
     svg.append("circle")
@@ -54,7 +55,12 @@ var svg = d3.select("body").append("svg")
 	   r: 5,
 	   fill: "blue"
 	})
-	});
+	
+});
+
+<!-- ////////////////////////////////////////// LINE CHART ///////////////////////////////////////////////////-->
+
+//Code for simple line chart goes here
 		
 </script>
 </body>
