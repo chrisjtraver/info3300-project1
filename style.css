@@ -1,5 +1,29 @@
-#boroughs {
-  stroke: black;
-	stroke-width: 1px;
-	fill: #ccc;
+body {
+  font-family: "Open Sans";
 }
+
+.center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.map {
+  background-color: white;
+}
+
+.map-label {
+  fill: black;
+  font-size: 30px;
+}
+
+.boroughs {
+/*  stroke: black;
+  stroke-width: 1px;*/
+}
+
+.borough-1 { fill: #ddc; }
+.borough-2 { fill: #cdd; }
+.borough-3 { fill: #cdc; }
+.borough-4 { fill: #dcd; }
+.borough-5 { fill: #becbdd; }
