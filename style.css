@@ -27,3 +27,7 @@ body {
 .borough-3 { fill: #cdc; }
 .borough-4 { fill: #dcd; }
 .borough-5 { fill: #becbdd; }
+
+.axis path { fill: none; stroke: black; }
+.axis line { stroke: black; }
+.axis text { font-size: 10pt; }
