@@ -8,26 +8,33 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> <!--Import Open Sans Font-->
 </head>
 
+<style>
+.axis path {fill: none; stroke: #aaa;}
+.axis line { stroke: black;}
+.axis text {font-size: 14px;}
+</style>
+
 <body>
 <h1 class="center">Trends in Marijuanna Prices & Arrest Locations</h1>
 <h3 class="center">Chris Traver, Leila Younes, Chris Yoo</h3>
 <div class="gradientScale"></div>
 <div class="map"></div>
+<br><br><br><br><br><br><br>
 <div class="line-chart"></div>
 
 <script>
 
 <!-- ////////////////////////////////////////// SVG FOR GRAIDENT SCALE ///////////////////////////////////////////////////-->
- 
+
 //Attributes for Gradient Scale
 var width = 1200,
    height = 100;
 
-//Create Gradient Scale SVG 
+//Create Gradient Scale SVG
 var svg = d3.select(".gradientScale").append("svg")
     .attr("width", width)
     .attr("height", height)
-	
+
 <!-- ////////////////////////////////////////// GRADIENT FOR PRICES ///////////////////////////////////////////////////-->
 
 gradientColors = ["green","red"]
@@ -57,7 +64,7 @@ svg.append("rect")
     .attr("y", 40)
 	.attr("height", 25)
     .attr("width", width)
-  
+
 </script>
 
 <script>
@@ -72,7 +79,7 @@ var width = 1200,
 var svg = d3.select(".map").append("svg")
     .attr("width", width)
     .attr("height", height)
-	.attr("class", "map");
+	  .attr("class", "map");
 
   //Map Projection Function
   d3.json("nyc.json", function(error, nyb) {
@@ -94,10 +101,10 @@ var svg = d3.select(".map").append("svg")
 		.enter().append("path")
 		.attr("class", function(d){ return "borough-"+d.properties.boroughCode; })
 		.attr("d", path);
-	
-		
+
+
 <!-- ////////////////////////////////////////// PLOT CIRCLES ON MAP ///////////////////////////////////////////////////-->
-	
+
 	for (i = 0; i < data.length; i++) {
 		var lonlat = [data[i].lon, data[i].lat];
 		var xy = projection(lonlat)
@@ -110,7 +117,7 @@ var svg = d3.select(".map").append("svg")
 		})
 		.attr("stroke", "black")
 	}
-  
+
 <!-- ////////////////////////////////////////// BOUROUGH LABELS ///////////////////////////////////////////////////-->
 
 //Staten Island
@@ -140,7 +147,7 @@ svg.append("text")
 				.attr("y", "40%")
 				.attr("class", "map-label")
 				.text("Queens")
-				
+
 //Brooklyn
 svg.append("text")
 				.attr("x", "50%")
@@ -148,12 +155,116 @@ svg.append("text")
 				.attr("class", "map-label")
 				.text("Brooklyn")
 });
-  
+
 
 <!-- ////////////////////////////////////////// LINE CHART ///////////////////////////////////////////////////-->
 
-//Code for simple line chart goes here
-		
+var widthL = 1000;
+var heightL = 500;
+var svgLine = d3.select("div.line-chart").append("svg")
+              .attr("width", widthL).attr("height", heightL);
+
+// <text x="10" y="100">C</text>
+// <text x="100" y="190">A</text>
+
+var parseDate = d3.time.format("%d-%b").parse;
+
+data.forEach(function(d) {
+   d.date = parseDate(d.date);
+   d.price = +d.price;
+})
+
+var padding = 60;
+var title = "Title";
+var xLabel = "Price";
+var yLabel = "Date";
+
+svgLine.append("text").text("Marijuana Prices over Time").attr("x", 370).attr("y", 20)
+       .attr("alignment-baseline", "middle").attr("font-size", 30);
+
+var xScale = d3.time.scale().range([padding+5,widthL-padding]);
+var yScale = d3.scale.linear().domain([d3.min(data, function(d) { return d.price; }) - 1,
+                                       d3.max(data, function(d) { return d.price; }) + 1])
+                                       .range([heightL-padding,padding]);
+
+xScale.domain(d3.extent(data, function(d) {return d.date; }));
+
+var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(12)
+                         .ticks(d3.time.months).tickSize(16, 0)
+                         .tickFormat(d3.time.format("%B"));;
+var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(12)
+                          .tickFormat(d3.format("s"));
+
+svgLine.selectAll("circle").data(data)
+              .enter().append("circle")
+              .attr("class", "dot")
+              .attr("r", 3.5)
+              .attr("fill", "#2eb82e")
+              .attr("cx", function(d) {
+                return xScale(d.date);
+              })
+              .attr("cy", function(d) {
+                return yScale(d.price);
+              });
+
+svgLine.append("g").attr("transform", "translate(0," + (heightL - padding) + ")")
+                        .attr("class", "axis").call(xAxis);
+
+svgLine.append("g").attr("transform", "translate(" + padding + ",0)")
+                        .attr("class", "axis").call(yAxis);
+
+
+
+// function convertDate(s) {
+//   var temp = s.substring(s.length-3, s.length);
+//   var orig = s.substring(0, s.length-4);
+//
+//   switch(s) {
+//     case "Jan":
+//       s = "1";
+//       break;
+//     case "Feb":
+//       s = "2";
+//       break;
+//     case "Mar":
+//       s = "3";
+//       break;
+//     case "Apr":
+//       s = "4";
+//       break;
+//     case "May":
+//       s = "5";
+//       break;
+//     case "Jun":
+//       s = "6";
+//       break;
+//     case "July":
+//       s = "7";
+//       break;
+//     case "Aug":
+//       s = "8";
+//       break;
+//     case "Sep":
+//       s = "9";
+//       break;
+//     case "Oct":
+//       s = "10";
+//       break;
+//     case "Nov":
+//       s = "11";
+//       break;
+//     case "Dec":
+//       s = "12";
+//       break;
+//     default:
+//       break;
+//   }
+//   return s+orig;
+//
+// }
+
+
+
 </script>
 </body>
 </html>
