@@ -6,6 +6,7 @@
   <script src="data.json"></script> <!--Arrest Data Import-->
   <link rel="stylesheet" type="text/css" href="style.css"> <!--External CSS Import-->
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> <!--Import Open Sans Font-->
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,100' rel='stylesheet' type='text/css'> <!-- Import Roboto Font -->
 </head>
 
 <body>
@@ -22,6 +23,7 @@ of the map.  As you can see, most of the marijuana related arrests occurred in c
 <p>This map displays all of the arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
 The street price of marijuana at the arrest data is signified by the color of the data point, which is also explained in the scale to the left
 of the map.  As you can see, most of the marijuana related arrests occurred in clumps throughout the 5 boroughs.</p>
+<div class="steam-graph"></div>
 
 <h3> Demographic Data </h3>
 <p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include things like gender, race, age, etc.</p>
@@ -127,7 +129,7 @@ svg.append("text")
 
 var gradientHeight = 630;
 var gradientWidth = 30;
-var gradientColors = ["green","red"];
+var gradientColors = ["#64DE89","#007B25"];
 var gradientScale = d3.scale.linear().domain([263.68, 269.11]).range(gradientColors);
 
 var gradientRect = svg.append("defs").append("linearGradient")
@@ -161,7 +163,7 @@ var width = mapWidth;
 var padding = 190;
 
 //Scale Function
-var yScale = d3.scale.linear().domain([263.68, 269.11]).range([710, 80]); //domain is same as in HW2
+var yScale = d3.scale.linear().domain([263.68, 269.11]).range([710, 80]);
 
 //Create Axis
 var yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -178,6 +180,7 @@ svg.append("text")
 
 <!-- ////////////////////////////////////////// STEAM GRAPH ///////////////////////////////////////////////////-->
 
+<!--Code for steam graph goes here-->
 
 <!-- ////////////////////////////////////////// DEMOGRAPHIC CHARTS ///////////////////////////////////////////////////-->
 
@@ -195,40 +198,202 @@ var female = 0;
       }
 	}
 
+//Simple algo to calculate numbers of race	
+var black = 0;
+var blackHispanic = 0;
+var whiteHispanic = 0;
+var white = 0;
+var asian = 0;
+var indian = 0;
+	for (i = 0; i < data.length; i++) {
+	  if (data[i].race == 1) { //black
+        var black = black+1;
+      }
+	  if (data[i].race == 2) { //black hispanic
+        var blackHispanic = blackHispanic+1;
+      }
+	  if (data[i].race == 3) { //white hispanic
+        var whiteHispanic = whiteHispanic+1;
+      }
+	  if (data[i].race == 4) { //white
+        var white = white+1;
+      }
+	  if (data[i].race == 5) { //asian
+        var asian = asian+1;
+      }
+	  if (data[i].race == 6) { //indian
+        var indian = indian+1;
+      }
+	}
+
+//Set Attributes of Demographic SVG	
 var width = 1200;
 var height = 300;
-var radius = height / 2;
-var color = d3.scale.category20c();
 
 var demographicsvg = d3.select('.demographics')
   .append("svg")
   .attr("width", width)
   .attr("height", height);
   
-demographicsvg.append("circle")
+//Group that contains all parts of Female Symbol
+var femaleG = demographicsvg.append("g")
+				.attr("transform", "scale(1.6), translate(0, 20)");
+				
+//Group that contains all parts of Male Symbol
+var maleG = demographicsvg.append("g")
+				.attr("transform", "scale(1.6), translate(-100, 20)");
+				
+//Female Symbol Parts Begin
+femaleG.append("circle")
   .attr("r", 20)
   .attr("cx", 60)
   .attr("cy", 30)
   .attr("fill", "pink");
   
-demographicsvg.append("polygon")
+femaleG.append("polygon")
   .attr("points", "60,40 30,100 90,100")
   .attr("fill", "pink");
 
-demographicsvg.append("rect")
+femaleG.append("rect")
   .attr("x", 40)
   .attr("y", 100)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "pink");
+
+femaleG.append("rect")
+  .attr("x", 70)
+  .attr("y", 100)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "pink");
   
+femaleG.append("rect")
+  .attr("x", 100)
+  .attr("y", -30)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "pink")
+  .attr("transform", "rotate(45)")
+
+femaleG.append("rect")
+  .attr("x", 65)
+  .attr("y", 10)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "pink")
+  .attr("transform", "rotate(145 50 50)")
   
+//Male Symbol Parts Begin
+maleG.append("circle")
+  .attr("r", 20)
+  .attr("cx", 260)
+  .attr("cy", 30)
+  .attr("fill", "lightblue");
+  
+maleG.append("rect")
+  .attr("x", 240)
+  .attr("y", 48)
+  .attr("width", 40)
+  .attr("height", 60)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 220)
+  .attr("y", 48)
+  .attr("width", 30)
+  .attr("height", 10)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 220)
+  .attr("y", 48)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 265)
+  .attr("y", 48)
+  .attr("width", 30)
+  .attr("height", 10)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 290)
+  .attr("y", 48)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 240)
+  .attr("y", 100)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "lightblue")
+
+maleG.append("rect")
+  .attr("x", 270)
+  .attr("y", 100)
+  .attr("width", 10)
+  .attr("height", 50)
+  .attr("fill", "lightblue")
+  
+//Male-Female Labels Begin
+demographicsvg.append("text")
+				.attr("x", "63")
+				.attr("y", "30")
+				.text("Female")
+				.attr("font-size", "20px")
+				.attr("font-weight", "bold")
+				
+demographicsvg.append("text")
+				.attr("x", "80")
+				.attr("y", "300")
+				.text(Math.floor(female/(male+female)*100)+"%")
+				.attr("font-size", "20px")
+
+demographicsvg.append("text")
+				.attr("x", "233")
+				.attr("y", "30")
+				.text("Male")
+				.attr("font-size", "20px")
+				.attr("font-weight", "bold")
+				
+demographicsvg.append("text")
+				.attr("x", "240")
+				.attr("y", "300")
+				.text(Math.ceil(male/(male+female)*100)+"%")
+				.attr("font-size", "20px")
+				
+//Group that contains race bar chart
+var ageGraph = demographicsvg.append("g")
+				.attr("transform", "translate(500, 0)");
+				
+//Set attributes of race bar chart element		
+var height = 300;
+var width = 700;
+var padding = 30;
+				
+//Scale Functions for race bar chart
+var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"]).rangeBands([30, width]);
+var yScale = d3.scale.linear().domain([0, 1326]).range([height - padding, padding]); //domain is same as in HW2
+
+//Create Axes for race bar chart
+var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+var yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+//Draw Axes for race bar chart
+ageGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
+ageGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
+
 </script>
 
 <!-- ////////////////////////////////////////// PRICE OVER TIME LINE CHART ///////////////////////////////////////////////////-->
 
 <script>
-//Set width and height of chart
+//Set width and height of price of time line chart
 var widthL = 1300;
 var heightL = 500;
 var svgLine = d3.select(".price-over-time").append("svg")
@@ -277,6 +442,7 @@ svgLine.selectAll("circle").data(data)
               .attr("class", "dot")
               .attr("r", 3.5)
               .attr("fill", "#2eb82e")
+			  .attr("stroke", "black")
               .attr("cx", function(d) {return xScale(d.date);})
               .attr("cy", function(d) {return yScale(d.price);});
 			  

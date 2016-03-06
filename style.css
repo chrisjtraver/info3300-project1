@@ -1,5 +1,6 @@
-body {
-  font-family: "Open Sans";
+/*GENERAL STYLES*/
+h1, h3, p, body {
+	font-family:Roboto;
 }
 
 .center {
@@ -8,6 +9,7 @@ body {
   margin-right: auto;
 }
 
+/*MAP STYLES*/
 .map {
   background-color: white;
 }
@@ -28,6 +30,7 @@ body {
 .borough-4 { fill: #dcd; }
 .borough-5 { fill: #becbdd; }
 
+/*GRAPH STYLES*/
 .axis path { fill: none; stroke: black; }
 .axis line { stroke: black; }
 .axis text { font-size: 10pt; }
