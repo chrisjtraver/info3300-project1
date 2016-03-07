@@ -26,7 +26,7 @@ of the map.  As you can see, most of the marijuana related arrests occurred in c
 <div class="steam-graph"></div>
 
 <h3> Demographic Data </h3>
-<p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include things like gender, race, age, etc.</p>
+<p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include attributes such as gender, race, age, etc.</p>
 <div class="demographics"></div>
 
 <h3>Marijuana Prices over Time</h3>
@@ -38,7 +38,7 @@ prices for each day, however, we displayed the scale on the x-axis using only th
 <!-- ////////////////////////////////////////// NYC MAP PROJECTION ///////////////////////////////////////////////////-->
 
 <script>
-  
+
 //Attributes for NYC Map
 var mapWidth = 1200;
 var mapHeight = 800;
@@ -69,10 +69,10 @@ var svg = d3.select(".map").append("svg")
 		.enter().append("path")
 		.attr("class", function(d){ return "borough-"+d.properties.boroughCode; })
 		.attr("d", path);
-	
-		
+
+
 <!-- ////////////////////////////////////////// PLOT CIRCLES ON MAP ///////////////////////////////////////////////////-->
-	
+
 	for (i = 0; i < data.length; i++) {
 		var lonlat = [data[i].lon, data[i].lat];
 		var xy = projection(lonlat)
@@ -85,7 +85,7 @@ var svg = d3.select(".map").append("svg")
 		})
 		.attr("stroke", "black")
 	}
-  
+
 <!-- ////////////////////////////////////////// BOUROUGH LABELS ///////////////////////////////////////////////////-->
 
 //Staten Island
@@ -115,7 +115,7 @@ svg.append("text")
 				.attr("y", "50%")
 				.attr("class", "map-label")
 				.text("Queens")
-				
+
 //Brooklyn
 svg.append("text")
 				.attr("x", "53%")
@@ -123,7 +123,7 @@ svg.append("text")
 				.attr("class", "map-label")
 				.text("Brooklyn")
 });
-  
+
 
 <!-- ////////////////////////////////////////// GRADIENT SCALE ///////////////////////////////////////////////////-->
 
@@ -157,7 +157,7 @@ svg.append("rect")
 	.attr("height", gradientHeight)
     .attr("width", gradientWidth)
 
-//Set attributes of Scale		
+//Set attributes of Scale
 var height = mapHeight-100;
 var width = mapWidth;
 var padding = 190;
@@ -173,7 +173,7 @@ svg.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", 
 
 svg.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)") 
+            .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)")
             .text("Price of Marijuana (in $)") //explain that y scale is in billions
 			.style("font-size", 30);
 </script>
@@ -186,7 +186,7 @@ svg.append("text")
 
 <script>
 
-//Simple algo to calculate number of male and female arrests	
+//Simple algo to calculate number of male and female arrests
 var male = 0;
 var female = 0;
 	for (i = 0; i < data.length; i++) {
@@ -198,7 +198,7 @@ var female = 0;
       }
 	}
 
-//Simple algo to calculate numbers of race	
+//Simple algo to calculate numbers of race
 var black = 0;
 var blackHispanic = 0;
 var whiteHispanic = 0;
@@ -226,7 +226,20 @@ var indian = 0;
       }
 	}
 
-//Set Attributes of Demographic SVG	
+var races = ["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"];
+var raceDataFreq = [black, blackHispanic, whiteHispanic, white, asian, indian];
+
+var demodata = [];
+
+for(var i = 0; i < races.length; i++) {
+  demodata.push( {
+    race: races[i],
+    frequency: raceDataFreq[i]
+  });
+  console.log(demodata[i]);
+}
+
+//Set Attributes of Demographic SVG
 var width = 1200;
 var height = 300;
 
@@ -234,22 +247,22 @@ var demographicsvg = d3.select('.demographics')
   .append("svg")
   .attr("width", width)
   .attr("height", height);
-  
+
 //Group that contains all parts of Female Symbol
 var femaleG = demographicsvg.append("g")
 				.attr("transform", "scale(1.6), translate(0, 20)");
-				
+
 //Group that contains all parts of Male Symbol
 var maleG = demographicsvg.append("g")
 				.attr("transform", "scale(1.6), translate(-100, 20)");
-				
+
 //Female Symbol Parts Begin
 femaleG.append("circle")
   .attr("r", 20)
   .attr("cx", 60)
   .attr("cy", 30)
   .attr("fill", "pink");
-  
+
 femaleG.append("polygon")
   .attr("points", "60,40 30,100 90,100")
   .attr("fill", "pink");
@@ -267,7 +280,7 @@ femaleG.append("rect")
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "pink");
-  
+
 femaleG.append("rect")
   .attr("x", 100)
   .attr("y", -30)
@@ -283,14 +296,14 @@ femaleG.append("rect")
   .attr("height", 50)
   .attr("fill", "pink")
   .attr("transform", "rotate(145 50 50)")
-  
+
 //Male Symbol Parts Begin
 maleG.append("circle")
   .attr("r", 20)
   .attr("cx", 260)
   .attr("cy", 30)
   .attr("fill", "lightblue");
-  
+
 maleG.append("rect")
   .attr("x", 240)
   .attr("y", 48)
@@ -339,7 +352,7 @@ maleG.append("rect")
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "lightblue")
-  
+
 //Male-Female Labels Begin
 demographicsvg.append("text")
 				.attr("x", "63")
@@ -347,7 +360,7 @@ demographicsvg.append("text")
 				.text("Female")
 				.attr("font-size", "20px")
 				.attr("font-weight", "bold")
-				
+
 demographicsvg.append("text")
 				.attr("x", "80")
 				.attr("y", "300")
@@ -360,24 +373,25 @@ demographicsvg.append("text")
 				.text("Male")
 				.attr("font-size", "20px")
 				.attr("font-weight", "bold")
-				
+
 demographicsvg.append("text")
 				.attr("x", "240")
 				.attr("y", "300")
 				.text(Math.ceil(male/(male+female)*100)+"%")
 				.attr("font-size", "20px")
-				
+
 //Group that contains race bar chart
 var ageGraph = demographicsvg.append("g")
 				.attr("transform", "translate(500, 0)");
-				
-//Set attributes of race bar chart element		
+
+//Set attributes of race bar chart element
 var height = 300;
 var width = 700;
 var padding = 30;
-				
+
 //Scale Functions for race bar chart
-var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"]).rangeBands([30, width]);
+var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"])
+                .rangeBands([padding, width]);
 var yScale = d3.scale.linear().domain([0, 1326]).range([height - padding, padding]); //domain is same as in HW2
 
 //Create Axes for race bar chart
@@ -387,6 +401,11 @@ var yAxis = d3.svg.axis().scale(yScale).orient("left");
 //Draw Axes for race bar chart
 ageGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
 ageGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
+
+ageGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
+        .style("fill", "green").attr("x", function(d) {return xScale(d.race)+5;})
+        .attr("width", xScale.rangeBand()-15).attr("y", function(d) {return yScale(d.frequency);})
+        .attr("height", function(d) {return height -padding - yScale(d.frequency);});
 
 </script>
 
@@ -399,7 +418,7 @@ var heightL = 500;
 var svgLine = d3.select(".price-over-time").append("svg")
               .attr("width", widthL).attr("height", heightL);
 
-//Parse dataset			  
+//Parse dataset
 var parseDate = d3.time.format("%d-%b").parse;
 data.forEach(function(d) {
    d.date = parseDate(d.date);
@@ -415,12 +434,12 @@ var yLabel = "Date";
 //Add title to the chart
 //svgLine.append("text").text("Marijuana Prices over Time").attr("x", 370).attr("y", 20)
 //       .attr("alignment-baseline", "middle").attr("font-size", 30);
-	   
+
 var xScale = d3.time.scale().range([padding+5,widthL-padding]);
 var yScale = d3.scale.linear().domain([d3.min(data, function(d) { return d.price; }) - 1,
                                        d3.max(data, function(d) { return d.price; }) + 1])
                                        .range([heightL-padding,padding]);
-									   
+
 xScale.domain(d3.extent(data, function(d) {return d.date; }));
 
 var xAxis = d3.svg.axis()
@@ -430,13 +449,13 @@ var xAxis = d3.svg.axis()
               .ticks(d3.time.months)
 			  .tickSize(16, 0)
               .tickFormat(d3.time.format("%B"));
-						 
+
 var yAxis = d3.svg.axis()
 			  .scale(yScale)
 			  .orient("left")
 			  .ticks(12)
               .tickFormat(d3.format("s"));
-			  
+
 svgLine.selectAll("circle").data(data)
               .enter().append("circle")
               .attr("class", "dot")
@@ -445,63 +464,16 @@ svgLine.selectAll("circle").data(data)
 			  .attr("stroke", "black")
               .attr("cx", function(d) {return xScale(d.date);})
               .attr("cy", function(d) {return yScale(d.price);});
-			  
+
 svgLine.append("g")
 			  .attr("transform", "translate(0," + (heightL - padding) + ")")
               .attr("class", "axis").call(xAxis);
-			  
+
 svgLine.append("g")
 			  .attr("transform", "translate(" + padding + ",0)")
               .attr("class", "axis").call(yAxis);
-			  
-			  
-// function convertDate(s) {
-//   var temp = s.substring(s.length-3, s.length);
-//   var orig = s.substring(0, s.length-4);
-//
-//   switch(s) {
-//     case "Jan":
-//       s = "1";
-//       break;
-//     case "Feb":
-//       s = "2";
-//       break;
-//     case "Mar":
-//       s = "3";
-//       break;
-//     case "Apr":
-//       s = "4";
-//       break;
-//     case "May":
-//       s = "5";
-//       break;
-//     case "Jun":
-//       s = "6";
-//       break;
-//     case "July":
-//       s = "7";
-//       break;
-//     case "Aug":
-//       s = "8";
-//       break;
-//     case "Sep":
-//       s = "9";
-//       break;
-//     case "Oct":
-//       s = "10";
-//       break;
-//     case "Nov":
-//       s = "11";
-//       break;
-//     case "Dec":
-//       s = "12";
-//       break;
-//     default:
-//       break;
-//   }
-//   return s+orig;
-//
-// }
+
+
 </script>
 </body>
 </html>
