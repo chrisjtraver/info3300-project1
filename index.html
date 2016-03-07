@@ -10,13 +10,14 @@
 </head>
 
 <body>
-<h1 class="center">Trends in NYC Marijuanna Arrests</h1>
-<h3 class="center">Chris Traver, Leila Younes, Chris Yoo</h3>
+<h1 class="center">2014 Trends in NYC Marijuanna Arrests</h1>
+<h3 class="center" style="font-style: italic;" >Christopher Traver, Lylla Younes, Christopher Yoo</h3>
 
-<h3> Arrest Prices by Location </h3>
+<h3> Arrests by Location </h3>
 <p>This map displays all of the arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
-The street price of marijuana at the arrest data is signified by the color of the data point, which is also explained in the scale to the left
-of the map.  As you can see, most of the marijuana related arrests occurred in clumps throughout the 5 boroughs.</p>
+The street price of marijuana at the arrest data is signified by the color of the data point, which is detailed on the scale to the left
+of the map.  The darker colored dots represent more expensive marijuana, while the lighter colored dots represent cheaper marijuana. The goal
+of this map is to illuminate different trends in the <strong>location</strong> and <strong>prices of marijuana</strong> for related arrests.</p>
 <div class="map"></div>
 
 <h3> Steam Graph </h3>
@@ -26,19 +27,23 @@ of the map.  As you can see, most of the marijuana related arrests occurred in c
 <div class="steam-graph"></div>
 
 <h3> Demographic Data </h3>
-<p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include attributes such as gender, race, age, etc.</p>
+<p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include breakdowns of the genders, races, and
+ages of offenders that were arrested for marijuana related charges.</p>
 <div class="demographics"></div>
 
 <h3>Marijuana Prices over Time</h3>
 <p>This graph looks at the trends in the street price of marijuana in New York City from January 1st, 2014 to December 31st, 2014.  There are
-prices for each day, however, we displayed the scale on the x-axis using only the months to make it more readable for the user.</p>
+prices data points for each day, however, we displayed the scale on the x-axis by grouping by months to make it more readable.</p>
 <div class="price-over-time"></div>
 
+<h3>Marijuana Related Arrests over Time</h3>
+<p>This graph looks at the trends in the number of marijuana related arrests in New York City from January 1st, 2014 to December 31st, 2014.</p>
+<div class="arrests-over-time"></div>
 
 <!-- ////////////////////////////////////////// NYC MAP PROJECTION ///////////////////////////////////////////////////-->
 
 <script>
-
+  
 //Attributes for NYC Map
 var mapWidth = 1200;
 var mapHeight = 800;
@@ -69,10 +74,10 @@ var svg = d3.select(".map").append("svg")
 		.enter().append("path")
 		.attr("class", function(d){ return "borough-"+d.properties.boroughCode; })
 		.attr("d", path);
-
-
+	
+		
 <!-- ////////////////////////////////////////// PLOT CIRCLES ON MAP ///////////////////////////////////////////////////-->
-
+	
 	for (i = 0; i < data.length; i++) {
 		var lonlat = [data[i].lon, data[i].lat];
 		var xy = projection(lonlat)
@@ -80,12 +85,12 @@ var svg = d3.select(".map").append("svg")
 		.attr({
 		  cx: xy[0],
 		  cy: xy[1],
-		  r: 5,
+		  r: 4,
 		  fill: gradientScale(data[i].price),
 		})
 		.attr("stroke", "black")
 	}
-
+  
 <!-- ////////////////////////////////////////// BOUROUGH LABELS ///////////////////////////////////////////////////-->
 
 //Staten Island
@@ -115,7 +120,7 @@ svg.append("text")
 				.attr("y", "50%")
 				.attr("class", "map-label")
 				.text("Queens")
-
+				
 //Brooklyn
 svg.append("text")
 				.attr("x", "53%")
@@ -123,13 +128,13 @@ svg.append("text")
 				.attr("class", "map-label")
 				.text("Brooklyn")
 });
-
+  
 
 <!-- ////////////////////////////////////////// GRADIENT SCALE ///////////////////////////////////////////////////-->
 
 var gradientHeight = 630;
 var gradientWidth = 30;
-var gradientColors = ["#64DE89","#007B25"];
+var gradientColors = ["#FFF","#3366ff"];
 var gradientScale = d3.scale.linear().domain([263.68, 269.11]).range(gradientColors);
 
 var gradientRect = svg.append("defs").append("linearGradient")
@@ -157,7 +162,7 @@ svg.append("rect")
 	.attr("height", gradientHeight)
     .attr("width", gradientWidth)
 
-//Set attributes of Scale
+//Set attributes of Scale		
 var height = mapHeight-100;
 var width = mapWidth;
 var padding = 190;
@@ -173,7 +178,7 @@ svg.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", 
 
 svg.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)")
+            .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)") 
             .text("Price of Marijuana (in $)") //explain that y scale is in billions
 			.style("font-size", 30);
 </script>
@@ -185,7 +190,7 @@ svg.append("text")
 <!-- ////////////////////////////////////////// DEMOGRAPHIC CHARTS ///////////////////////////////////////////////////-->
 
 <script>
-
+  
 //Simple algo to calculate number of male and female arrests
 var male = 0;
 var female = 0;
@@ -197,7 +202,7 @@ var female = 0;
         var male = male+1;
       }
 	}
-
+	
 //Simple algo to calculate numbers of race
 var black = 0;
 var blackHispanic = 0;
@@ -225,10 +230,9 @@ var indian = 0;
         var indian = indian+1;
       }
 	}
-
+	
 var races = ["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"];
 var raceDataFreq = [black, blackHispanic, whiteHispanic, white, asian, indian];
-
 var demodata = [];
 
 for(var i = 0; i < races.length; i++) {
@@ -242,12 +246,11 @@ for(var i = 0; i < races.length; i++) {
 //Set Attributes of Demographic SVG
 var width = 1200;
 var height = 300;
-
 var demographicsvg = d3.select('.demographics')
   .append("svg")
   .attr("width", width)
   .attr("height", height);
-
+  
 //Group that contains all parts of Female Symbol
 var femaleG = demographicsvg.append("g")
 				.attr("transform", "scale(1.6), translate(0, 20)");
@@ -256,31 +259,28 @@ var femaleG = demographicsvg.append("g")
 var maleG = demographicsvg.append("g")
 				.attr("transform", "scale(1.6), translate(-100, 20)");
 
+
 //Female Symbol Parts Begin
 femaleG.append("circle")
   .attr("r", 20)
   .attr("cx", 60)
   .attr("cy", 30)
   .attr("fill", "pink");
-
 femaleG.append("polygon")
   .attr("points", "60,40 30,100 90,100")
   .attr("fill", "pink");
-
 femaleG.append("rect")
   .attr("x", 40)
   .attr("y", 100)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "pink");
-
 femaleG.append("rect")
   .attr("x", 70)
   .attr("y", 100)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "pink");
-
 femaleG.append("rect")
   .attr("x", 100)
   .attr("y", -30)
@@ -288,7 +288,6 @@ femaleG.append("rect")
   .attr("height", 50)
   .attr("fill", "pink")
   .attr("transform", "rotate(45)")
-
 femaleG.append("rect")
   .attr("x", 65)
   .attr("y", 10)
@@ -303,49 +302,42 @@ maleG.append("circle")
   .attr("cx", 260)
   .attr("cy", 30)
   .attr("fill", "lightblue");
-
 maleG.append("rect")
   .attr("x", 240)
   .attr("y", 48)
   .attr("width", 40)
   .attr("height", 60)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 220)
   .attr("y", 48)
   .attr("width", 30)
   .attr("height", 10)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 220)
   .attr("y", 48)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 265)
   .attr("y", 48)
   .attr("width", 30)
   .attr("height", 10)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 290)
   .attr("y", 48)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 240)
   .attr("y", 100)
   .attr("width", 10)
   .attr("height", 50)
   .attr("fill", "lightblue")
-
 maleG.append("rect")
   .attr("x", 270)
   .attr("y", 100)
@@ -360,20 +352,17 @@ demographicsvg.append("text")
 				.text("Female")
 				.attr("font-size", "20px")
 				.attr("font-weight", "bold")
-
 demographicsvg.append("text")
 				.attr("x", "80")
 				.attr("y", "300")
 				.text(Math.floor(female/(male+female)*100)+"%")
 				.attr("font-size", "20px")
-
 demographicsvg.append("text")
 				.attr("x", "233")
 				.attr("y", "30")
 				.text("Male")
 				.attr("font-size", "20px")
 				.attr("font-weight", "bold")
-
 demographicsvg.append("text")
 				.attr("x", "240")
 				.attr("y", "300")
@@ -381,7 +370,7 @@ demographicsvg.append("text")
 				.attr("font-size", "20px")
 
 //Group that contains race bar chart
-var ageGraph = demographicsvg.append("g")
+var raceGraph = demographicsvg.append("g")
 				.attr("transform", "translate(500, 0)");
 
 //Set attributes of race bar chart element
@@ -399,10 +388,9 @@ var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 //Draw Axes for race bar chart
-ageGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
-ageGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
-
-ageGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
+raceGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
+raceGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
+raceGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
         .style("fill", "green").attr("x", function(d) {return xScale(d.race)+5;})
         .attr("width", xScale.rangeBand()-15).attr("y", function(d) {return yScale(d.frequency);})
         .attr("height", function(d) {return height -padding - yScale(d.frequency);});
@@ -418,7 +406,7 @@ var heightL = 500;
 var svgLine = d3.select(".price-over-time").append("svg")
               .attr("width", widthL).attr("height", heightL);
 
-//Parse dataset
+//Parse dataset			  
 var parseDate = d3.time.format("%d-%b").parse;
 data.forEach(function(d) {
    d.date = parseDate(d.date);
@@ -430,16 +418,12 @@ var padding = 60;
 var title = "Title";
 var xLabel = "Price";
 var yLabel = "Date";
-
-//Add title to the chart
-//svgLine.append("text").text("Marijuana Prices over Time").attr("x", 370).attr("y", 20)
-//       .attr("alignment-baseline", "middle").attr("font-size", 30);
-
+	   
 var xScale = d3.time.scale().range([padding+5,widthL-padding]);
 var yScale = d3.scale.linear().domain([d3.min(data, function(d) { return d.price; }) - 1,
                                        d3.max(data, function(d) { return d.price; }) + 1])
                                        .range([heightL-padding,padding]);
-
+									   
 xScale.domain(d3.extent(data, function(d) {return d.date; }));
 
 var xAxis = d3.svg.axis()
@@ -449,31 +433,146 @@ var xAxis = d3.svg.axis()
               .ticks(d3.time.months)
 			  .tickSize(16, 0)
               .tickFormat(d3.time.format("%B"));
-
+						 
 var yAxis = d3.svg.axis()
 			  .scale(yScale)
 			  .orient("left")
 			  .ticks(12)
               .tickFormat(d3.format("s"));
 
-svgLine.selectAll("circle").data(data)
-              .enter().append("circle")
-              .attr("class", "dot")
-              .attr("r", 3.5)
-              .attr("fill", "#2eb82e")
-			  .attr("stroke", "black")
-              .attr("cx", function(d) {return xScale(d.date);})
-              .attr("cy", function(d) {return yScale(d.price);});
+/*svgLine.append("rect")
+				.attr("x", padding+5)
+				.attr("y", padding)
+				.attr("width", 1175)
+				.attr("height", height+padding+20)
+				.attr("fill", "lightgreen")*/
+				
+//Function to plot points on curved path
+var lineFunction = d3.svg.line()
+                          .x(function(d) { return d.x; })
+                          .y(function(d) { return d.y; })
+                          .interpolate("basis");
+						  
+var lineData = [];
+for (i = 0; i < data.length; i++) {
+		lineData.push({"x":xScale(data[i].date),"y":yScale(data[i].price)});
+	}
 
+var clipSvg = svgLine.append("defs").append("clipPath")
+				.attr("id", "lineClipPath");
+
+clipSvg.append("path")
+               .attr("d", lineFunction(lineData))
+               .attr("stroke", "green")
+               .attr("stroke-width", 5)
+               .attr("fill", "none")
+			   .style("opacity", 0.75);
+				
+svgLine.append("path")
+               .attr("d", lineFunction(lineData))
+               .attr("stroke", "green")
+               .attr("stroke-width", 5)
+               .attr("fill", "none")
+			   .style("opacity", 0.75);
+			   
 svgLine.append("g")
 			  .attr("transform", "translate(0," + (heightL - padding) + ")")
               .attr("class", "axis").call(xAxis);
-
+			  
 svgLine.append("g")
-			  .attr("transform", "translate(" + padding + ",0)")
+			  .attr("transform", "translate(" + 65 + ",0)")
               .attr("class", "axis").call(yAxis);
 
+svgLine.append("text")
+			  .attr("x", 565)
+			  .attr("y", 495)
+			  .attr("font-weight", "bold")
+			  .text("Month")
 
+/*svgLine.append("rect")
+				.attr("x", padding)
+				.attr("y", 100)
+				.attr("width", 1200)
+				.attr("height", 1000)
+				.attr("fill", "white")
+				.attr("clip-path", "url(#lineClipPath)")*/
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.close); });
+
+//----------------------------------FREQUENCY OF CRIME---------------------------
+var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 40
+},
+width = 1200 - margin.left - margin.right,
+height = 500 - margin.top - margin.bottom;
+padding = 20;
+var x = d3.scale.ordinal()
+    .rangeBands([0, width]);
+var y = d3.scale.linear()
+    .range([height, 0]);
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(10);
+var svgC = d3.select(".arrests-over-time").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //var formatDate = d3.time.format("%d-%b").parse;
+    var parseDate2 = d3.time.format("%m");
+    var dates = [];
+    var tally = [];
+    for(var i = 1; i <= 12; i++) {
+      tally[i] = 0;
+    }
+    for (var i = 0; i < data.length; i++) {
+      dates.push( parseInt(parseDate2(data[i].date )));
+      tally[dates[i]]++;
+    }
+    var histdata = [];
+    for (var i = 1; i < tally.length; i++) {
+            histdata.push({
+                date: i,
+                frequency: tally[i]
+            });
+        }
+    x.domain(histdata.map(function (d) {
+        return d.date;
+    }));
+    y.domain([0, d3.max(histdata, function (d) {
+        return d.frequency;
+    })]);
+    console.log(histdata);
+    svgC.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+    svgC.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("x", 0)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Number of Arrests");
+    var crimeLine = d3.svg.line().x((function(d) { return x(d.date) + margin.left; }))
+                                 .y(function(d) { return y(d.frequency); });
+    svgC.append("svg:path").attr("d", crimeLine(histdata)).attr("stroke", "green")
+                                 .attr("stroke-width", 5).style("opacity", .7).style("fill", "none");
+								 
+			  
 </script>
 </body>
 </html>

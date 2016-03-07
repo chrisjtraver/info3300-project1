@@ -1,6 +1,8 @@
 /*GENERAL STYLES*/
 h1, h3, p, body {
 	font-family:Roboto;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .center {
