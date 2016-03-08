@@ -1,0 +1,4 @@
+http://stackoverflow.com/questions/17745682/d3-histogram-date-based
+
+The above source was consulted for creating a histogram/line graph with d3's
+time scale. 
