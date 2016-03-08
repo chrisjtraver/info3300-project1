@@ -172,7 +172,7 @@ svg.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", 
 svg.append("text")
             .attr("text-anchor", "middle")
             .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)") 
-            .text("Price of Marijuana (in $)") //explain that y scale is in billions
+            .text("Price of Marijuana ($/oz)") 
 			.style("font-size", 30);
 </script>
 
@@ -369,7 +369,7 @@ var raceGraph = demographicsvg.append("g")
 //Set attributes of race bar chart element
 var height = 300;
 var width = 700;
-var padding = 30;
+var padding = 40;
 
 //Scale Functions for race bar chart
 var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"])
@@ -388,6 +388,20 @@ raceGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
         .attr("width", xScale.rangeBand()-15).attr("y", function(d) {return yScale(d.frequency);})
         .attr("height", function(d) {return height -padding - yScale(d.frequency);});
 
+
+raceGraph.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -30)
+        .attr("x", -110)
+        .attr("dy", ".71em")
+		.attr("font-weight", "bold")
+        .style("text-anchor", "end")
+        .text("# of Arrests");
+raceGraph.append("text")
+		.attr("x", 360)
+		.attr("y", 295)
+		.attr("font-weight", "bold")
+		.text("Race")
 </script>
 
 <!-- ////////////////////////////////////////// PRICE OVER TIME LINE CHART ///////////////////////////////////////////////////-->
@@ -451,20 +465,13 @@ lineData.push({"x":65.6,"y":yScale(262.695)});
 
 var clipSvg = svgLine.append("defs").append("clipPath")
 				.attr("id", "lineClipPath");
-
-clipSvg.append("path")
-               .attr("d", lineFunction(lineData))
-               .attr("stroke", "green")
-               .attr("stroke-width", 5)
-               .attr("fill", "none")
-			   .style("opacity", 0.75);
 				
 svgLine.append("path")
                .attr("d", lineFunction(lineData))
                .attr("stroke", "green")
                .attr("stroke-width", 5)
                .attr("fill", "green")
-			   .style("opacity", 0.75);
+			   .style("opacity", 0.50);
 			   
 svgLine.append("g")
 			  .attr("transform", "translate(0," + (heightL - padding+1) + ")")
@@ -482,11 +489,11 @@ svgLine.append("text")
 svgLine.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
-        .attr("x", -200)
+        .attr("x", -180)
         .attr("dy", ".71em")
 		.attr("font-weight", "bold")
         .style("text-anchor", "end")
-        .text("Price (in $)");
+        .text("Price of Marijuana($/oz)");
 </script>
 
 <!-- ////////////////////////////////////////// FREQUENCY OF AGES ///////////////////////////////////////////////////-->
@@ -494,7 +501,7 @@ svgLine.append("text")
 <script>
 //Set width and height of price of time line chart
 var width = 1200;
-var height = 500;
+var height = 400;
 var padding = 50; 
 var svgAge = d3.select(".age_data").append("svg")
               .attr("width", width).attr("height", height);
@@ -507,7 +514,7 @@ var xAxisA = d3.svg.axis().scale(xScaleA).orient("bottom");
 var yAxisA = d3.svg.axis().scale(yScaleA).orient("left");
 
 //Draw Axes for age viz
-svgAge.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxisA);
+svgAge.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxisA).attr("display", "none");
 
 //no. arrests per age group
 var age_data = { "<18": 325, "18-24": 1039, "25-34": 529, "35-44": 190, "45-54": 82, "55+": 21 };
@@ -535,7 +542,51 @@ svgAge.selectAll('.circles').data(circles)
     })
     .attr('class','circles')
     .attr('opacity',0.5);
-
+	
+svgAge.append("text")
+			  .attr("x", 440)
+			  .attr("y", 80)
+			  .attr("font-weight", "bold")
+			  .attr("font-size", "30px")
+			  .text("Age Distributions of Arrests")
+svgAge.append("text")
+			  .attr("x", 132)
+			  .attr("y", 255)
+			  .attr("font-weight", "bold")
+			  .attr("fill", "white")
+			  .text("<18")
+svgAge.append("text")
+			  .attr("x", 300)
+			  .attr("y", 255)
+			  .attr("font-weight", "bold")
+			  .attr("fill", "white")
+			  .attr("font-size", "20px")
+			  .text("18-24")
+svgAge.append("text")
+			  .attr("x", 485)
+			  .attr("y", 255)
+			  .attr("font-weight", "bold")
+			  .attr("fill", "white")
+			  .attr("font-size", "20px")
+			  .text("25-34")
+svgAge.append("text")
+			  .attr("x", 665)
+			  .attr("y", 300)
+			  .attr("font-weight", "bold")
+			  .attr("font-size", "20px")
+			  .text("35-44")
+svgAge.append("text")
+			  .attr("x", 845)
+			  .attr("y", 300)
+			  .attr("font-weight", "bold")
+			  .attr("font-size", "20px")
+			  .text("45-54")
+svgAge.append("text")
+			  .attr("x", 1040)
+			  .attr("y", 300)
+			  .attr("font-weight", "bold")
+			  .attr("font-size", "20px")
+			  .text("55+")
 </script>
 
 <!-- ////////////////////////////////////////// FREQUENCY OF ARRESTS ///////////////////////////////////////////////////-->
