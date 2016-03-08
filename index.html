@@ -414,7 +414,7 @@ raceGraph.append("text")
 		.text("Race")
 </script>
 
-<!-- ////////////////////////////////////////// PRICE OVER TIME LINE CHART ///////////////////////////////////////////////////-->
+<!-- ////////////////// PRICE OVER TIME LINE CHART ---------------->
 
 <script>
 //Set width and height of price of time line chart
@@ -626,74 +626,91 @@ var margin = {
     bottom: 30,
     left: 40
 },
+
 width = 1200 - margin.left - margin.right,
 height = 500 - margin.top - margin.bottom;
 padding = 20;
+
+//use ordinal scale to customize x-scale for time
 var x = d3.scale.ordinal()
     .rangeBands([0, width]);
+
 var y = d3.scale.linear()
     .range([height, 0]);
+
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
+
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(10);
+
 var svgC = d3.select(".arrests-over-time").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    //var formatDate = d3.time.format("%d-%b").parse;
-    var parseDate2 = d3.time.format("%m");
-    var dates = [];
-    var freq = [];
-    for(var i = 1; i <= 12; i++) {
-      freq[i] = 0;
-    }
-    for (var i = 0; i < data.length; i++) {
-      dates.push( parseInt(parseDate2(data[i].date )));
-      freq[dates[i]]++;
-    }
-    var histdata = [];
-    for (var i = 1; i < freq.length; i++) {
-            histdata.push({
-                date: i,
-                frequency: freq[i]
-            });
-        }
-    x.domain(histdata.map(function (d) {
-        return d.date;
-    }));
-    y.domain([0, d3.max(histdata, function (d) {
-        return d.frequency;
-    })]);
-    //console.log(histdata);
-    svgC.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    svgC.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("x", 0)
-        .attr("dy", ".5em")
-		.attr("font-weight", "bold")
-        .style("text-anchor", "end")
-        .text("Number of Arrests");
-	  svgC.append("text")
-		.attr("x", 1090)
-		.attr("y", 445)
-		.attr("font-weight", "bold")
-		.text("Month")
-    var crimeLine = d3.svg.line().x((function(d) { return x(d.date) + margin.left; }))
-                                 .y(function(d) { return y(d.frequency); });
-    svgC.append("svg:path").attr("d", crimeLine(histdata)).attr("stroke", "green")
-                                 .attr("stroke-width", 5).style("opacity", .7).style("fill", "none");
+
+//data.date is currently in %d %m %Y . . . %time format. Convert it to just month.
+var parseDate2 = d3.time.format("%m");
+var dates = [];
+var freq = [];
+//set the frequency array to 0
+for(var i = 1; i <= 12; i++) {
+  freq[i] = 0;
+}
+
+//parse the dates, and for month x, increase the frequency when the date is seen
+for (var i = 0; i < data.length; i++) {
+  dates.push( parseInt(parseDate2(data[i].date )));
+  freq[dates[i]]++;
+}
+
+//create an array with date,frequency attributes
+var histdata = [];
+for (var i = 1; i < freq.length; i++) {
+        histdata.push({
+            date: i,
+            frequency: freq[i]
+       });
+}
+
+x.domain(histdata.map(function (d) {
+  return d.date;
+}));
+y.domain([0, d3.max(histdata, function (d) {
+  return d.frequency;
+})]);
+
+svgC.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + height + ")")
+  .call(xAxis);
+svgC.append("g")
+  .attr("class", "y axis")
+  .call(yAxis)
+  .append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 6)
+  .attr("x", 0)
+  .attr("dy", ".5em")
+  .attr("font-weight", "bold")
+  .style("text-anchor", "end")
+  .text("Number of Arrests");
+
+svgC.append("text")
+  .attr("x", 1090)
+  .attr("y", 445)
+  .attr("font-weight", "bold")
+  .text("Month")
+
+var crimeLine = d3.svg.line().x((function(d) { return x(d.date) + margin.left; }))
+  .y(function(d) { return y(d.frequency); });
+
+svgC.append("svg:path").attr("d", crimeLine(histdata)).attr("stroke", "green")
+.attr("stroke-width", 5).style("opacity", .7).style("fill", "none");
 
 
 </script>
