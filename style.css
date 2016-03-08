@@ -2,8 +2,8 @@
 h1, p, body {
 	font-family:Roboto;
 	font-weight: 300;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 50px;
+	margin-right: 50px;
 }
 
 h3 {
@@ -36,6 +36,7 @@ h3 {
 .borough-3 { fill: #cdc; }
 .borough-4 { fill: #dcd; }
 .borough-5 { fill: #becbdd; }
+
 
 /*GRAPH STYLES*/
 .axis path { fill: none; stroke: black; }
