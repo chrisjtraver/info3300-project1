@@ -5,29 +5,22 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"> </script> <!--JQuery Library Import-->
   <script src="data.json"></script> <!--Arrest Data Import-->
   <link rel="stylesheet" type="text/css" href="style.css"> <!--External CSS Import-->
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'> <!--Import Open Sans Font-->
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,100' rel='stylesheet' type='text/css'> <!-- Import Roboto Font -->
 </head>
 
 <body>
-<h1 class="center">2014 Trends in NYC Marijuanna Arrests</h1>
+<h1 class="center">2014 Trends in NYC Marijuana Arrests</h1>
 <h3 class="center" style="font-style: italic;" >Christopher Traver, Lylla Younes, Christopher Yoo</h3>
 
 <h3> Map of Arrest Locations </h3>
 <p>This map displays all arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
-The street price of marijuana at the data of arrest is signified by the color of the data point.  A scale describing the color gradient used to plot the points
+The street price of marijuana at the date of arrest is signified by the color of the data point.  A scale describing the color gradient used to plot the points
  is detailed to the left of the map.  The darker colored dots represent more expensive marijuana, while the lighter colored dots represent cheaper marijuana. The goal
 of this map is to illuminate different trends in the <strong>location</strong> and <strong>prices of marijuana</strong> for related arrests, and to see whether
 the price of marijuana influenced the frequency of arrest. For example, we questioned whether there would be more clusters of arrests at locations
 where marijuana prices were higher. One noticeable trend is that there are mostly arrests at higher price points in Queens compared to the other four boroughs.
 It also appears that the density of arrests is not necessarily correlated to the price in that area. </p>
 <div class="map"></div>
-
-<h3> Trends in Marijuana Price </h3>
-<p>This map displays all of the arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
-The street price of marijuana at the arrest data is signified by the color of the data point, which is also explained in the scale to the left
-of the map.  As you can see, most of the marijuana related arrests occurred in clumps throughout the 5 boroughs.</p>
-<div class="steam-graph"></div>
 
 <h3> Demographic Data of Arrestees </h3>
 <p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include breakdowns of the genders, races, and
@@ -178,10 +171,6 @@ svg.append("text")
 			.style("font-size", 30);
 </script>
 
-<!-- ////////////////////////////////////////// LOWEST, HIGHEST, AVG PRICE GRAPH ///////////////////////////////////////////////////-->
-
-<!--Code goes here-->
-
 <!-- ////////////////////////////////////////// DEMOGRAPHIC CHARTS ///////////////////////////////////////////////////-->
 
 <script>
@@ -235,7 +224,6 @@ for(var i = 0; i < races.length; i++) {
     race: races[i],
     frequency: raceDataFreq[i]
   });
-  //console.log(demodata[i]);
 }
 
 //Set Attributes of Demographic SVG
@@ -253,7 +241,6 @@ var femaleG = demographicsvg.append("g")
 //Group that contains all parts of Male Symbol
 var maleG = demographicsvg.append("g")
 				.attr("transform", "scale(1.6), translate(-100, 20)");
-
 
 //Female Symbol Parts Begin
 femaleG.append("circle")
@@ -384,9 +371,8 @@ var width = 600;
 var padding = 40;
 
 //Scale Functions for race bar chart
-var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"])
-                .rangeBands([padding, width]);
-var yScale = d3.scale.linear().domain([0, 1326]).range([height - padding, padding]); //domain is same as in HW2
+var xScale = d3.scale.ordinal().domain(["Black", "Black Hispanic", "White Hispanic", "White", "Asian", "Indian"]).rangeBands([padding, width]);
+var yScale = d3.scale.linear().domain([0, 1326]).range([height - padding, padding]);
 
 //Create Axes for race bar chart
 var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
@@ -395,12 +381,18 @@ var yAxis = d3.svg.axis().scale(yScale).orient("left");
 //Draw Axes for race bar chart
 raceGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
 raceGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
-raceGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
-        .style("fill", "green").attr("opacity", 0.5).attr("x", function(d) {return xScale(d.race)+5;})
-        .attr("width", xScale.rangeBand()-15).attr("y", function(d) {return yScale(d.frequency);})
+raceGraph.append("g")
+		.selectAll("bar")
+		.data(demodata)
+		.enter()
+		.append("rect")
+        .style("fill", "green")
+		.attr("opacity", 0.5)
+		.attr("x", function(d) {return xScale(d.race)+5;})
+        .attr("width", xScale.rangeBand()-15)
+		.attr("y", function(d) {return yScale(d.frequency);})
         .attr("height", function(d) {return height -padding - yScale(d.frequency);});
-
-
+//y-axis label
 raceGraph.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", -30)
@@ -409,11 +401,19 @@ raceGraph.append("text")
 		.attr("font-weight", "bold")
         .style("text-anchor", "end")
         .text("# of Arrests");
+//x-axis label		
 raceGraph.append("text")
-		.attr("x", 360)
+		.attr("x", 310)
 		.attr("y", 295)
 		.attr("font-weight", "bold")
-		.text("Race")
+		.text("Race");
+//graph title	
+raceGraph.append("text")
+		.attr("x", 160)
+		.attr("y", 20)
+		.attr("font-weight", "bold")
+		.attr("font-size", "25px")
+		.text("Race Distributions of Arrests");
 </script>
 
 <!-- ////////////////// PRICE OVER TIME LINE CHART ---------------->
@@ -438,6 +438,7 @@ var title = "Title";
 var xLabel = "Price";
 var yLabel = "Date";
 
+//scale functions
 var xScale = d3.time.scale().range([padding+5,widthL+60-padding]);
 var yScale = d3.scale.linear().domain([d3.min(data, function(d) { return d.price; }) - 1,
                                        d3.max(data, function(d) { return d.price; }) + 1])
@@ -445,6 +446,7 @@ var yScale = d3.scale.linear().domain([d3.min(data, function(d) { return d.price
 
 xScale.domain(d3.extent(data, function(d) {return d.date; }));
 
+//format x-axis
 var xAxis = d3.svg.axis()
 			  .scale(xScale)
 			  .orient("bottom")
@@ -452,7 +454,7 @@ var xAxis = d3.svg.axis()
               .ticks(d3.time.months)
 			  .tickSize(16, 0)
               .tickFormat(d3.time.format("%B"));
-
+//format y-axis
 var yAxis = d3.svg.axis()
 			  .scale(yScale)
 			  .orient("left")
@@ -475,36 +477,35 @@ lineData.push({"x":1240,"y":yScale(262.695)});
 lineData.push({"x":65.6,"y":yScale(262.695)});
 lineData.push({"x":65.6,"y":yScale(262.695)});
 
-var clipSvg = svgLine.append("defs").append("clipPath")
-				.attr("id", "lineClipPath");
-
+//append all datapoints to graph
 svgLine.append("path")
                .attr("d", lineFunction(lineData))
                .attr("stroke", "green")
                .attr("stroke-width", 5)
                .attr("fill", "green")
 			   .style("opacity", 0.50);
-
+//append x-axis to graph
 svgLine.append("g")
 			  .attr("transform", "translate(0," + (heightL - padding+1) + ")")
               .attr("class", "axis").call(xAxis);
-
+//append y-axis to graph
 svgLine.append("g")
 			  .attr("transform", "translate(" + 65 + ",0)")
               .attr("class", "axis").call(yAxis);
-
+//append x-axis label
 svgLine.append("text")
 			  .attr("x", 565)
 			  .attr("y", 495)
 			  .attr("font-weight", "bold")
 			  .text("Month")
+//append y-axis label
 svgLine.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("x", -140)
         .attr("dy", ".71em")
 		.attr("font-weight", "bold")
-    .attr("font-size", "13px")
+		.attr("font-size", "13px")
         .style("text-anchor", "end")
         .text("Price of Marijuana(USD/oz)");
 </script>
@@ -512,7 +513,7 @@ svgLine.append("text")
 <!-- ////////////////////////////////////////// FREQUENCY OF AGES ///////////////////////////////////////////////////-->
 
 <script>
-//Set width and height of price of time line chart
+//Set width and height of svg
 var width = 1200;
 var height = 400;
 var padding = 50;
@@ -522,6 +523,7 @@ var svgAge = d3.select(".age_data").append("svg")
 //Scale Functions for age visualization
 var xScaleA = d3.scale.ordinal().domain(["<18", "18-24", "25-34", "35-44", "45-54", "55+"]).rangeBands([50, width-50]);
 var yScaleA = d3.scale.linear().domain([0, 500]).range([height - padding, padding]);
+
 //Create Axes for age viz
 var xAxisA = d3.svg.axis().scale(xScaleA).orient("bottom");
 var yAxisA = d3.svg.axis().scale(yScaleA).orient("left");
@@ -534,7 +536,7 @@ var age_data = { "<18": 325, "18-24": 1039, "25-34": 529, "35-44": 190, "45-54":
 
 var circles = [325,1039,529,190,82,21]
 var colors = ["#000066","#009999","#663399","#80dfff","#666699","#003333"];
-//var colors = ["#0033cc", "#003399", "#ff3333", "#3399ff", "#0066cc", "#3366cc"];
+//scale function for radius
 var rscale = d3.scale.linear()
 
 svgAge.selectAll('.circles').data(circles)
@@ -556,7 +558,7 @@ svgAge.selectAll('.circles').data(circles)
     })
     .attr('class','circles')
     .attr('opacity',.7);
-
+//graph titles
 svgAge.append("text")
 			  .attr("x", 440)
 			  .attr("y", 80)
@@ -622,6 +624,7 @@ svgAge.append("text")
 <!-- ////////////////////////////////////////// FREQUENCY OF ARRESTS ///////////////////////////////////////////////////-->
 
 <script>
+//attributes of svg element
 var margin = {
     top: 20,
     right: 60,
@@ -629,6 +632,7 @@ var margin = {
     left: 40
 },
 
+//set hight and width of svg
 width = 1200 - margin.left - margin.right,
 height = 500 - margin.top - margin.bottom;
 padding = 20;
@@ -648,7 +652,7 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(10);
-
+//append svg to div
 var svgC = d3.select(".arrests-over-time").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -685,7 +689,7 @@ x.domain(histdata.map(function (d) {
 y.domain([0, d3.max(histdata, function (d) {
   return d.frequency;
 })]);
-
+//append axes to graph
 svgC.append("g")
   .attr("class", "x axis")
   .attr("transform", "translate(0," + height + ")")
@@ -701,12 +705,12 @@ svgC.append("g")
   .attr("font-weight", "bold")
   .style("text-anchor", "end")
   .text("Number of Arrests");
-
+//append x-axis label
 svgC.append("text")
-  .attr("x", 1090)
+  .attr("x", 1000)
   .attr("y", 445)
   .attr("font-weight", "bold")
-  .text("Month")
+  .text("Month (Ex: 12=Dec)")
 
 var crimeLine = d3.svg.line().x((function(d) { return x(d.date) + margin.left; }))
   .y(function(d) { return y(d.frequency); });
