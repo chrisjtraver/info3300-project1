@@ -13,20 +13,21 @@
 <h1 class="center">2014 Trends in NYC Marijuanna Arrests</h1>
 <h3 class="center" style="font-style: italic;" >Christopher Traver, Lylla Younes, Christopher Yoo</h3>
 
-<h3> Arrests by Location </h3>
-<p>This map displays all of the arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
-The street price of marijuana at the arrest data is signified by the color of the data point, which is detailed on the scale to the left
-of the map.  The darker colored dots represent more expensive marijuana, while the lighter colored dots represent cheaper marijuana. The goal
-of this map is to illuminate different trends in the <strong>location</strong> and <strong>prices of marijuana</strong> for related arrests.</p>
+<h3> Map of Arrest Locations </h3>
+<p>This map displays all arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
+The street price of marijuana at the data of arrest is signified by the color of the data point.  A scale describing the color gradient used to plot the points
+ is detailed to the left of the map.  The darker colored dots represent more expensive marijuana, while the lighter colored dots represent cheaper marijuana. The goal
+of this map is to illuminate different trends in the <strong>location</strong> and <strong>prices of marijuana</strong> for related arrests. An example of a trend
+that we noticed is that there are mostly arrests at higher price points in Queens compared to the other four boroughs.</p>
 <div class="map"></div>
 
-<h3> Steam Graph </h3>
+<h3> Trends in Marijuana Price </h3>
 <p>This map displays all of the arrests for marijuana related offenses in NYC between January 1st, 2014 and December 31st, 2014.
 The street price of marijuana at the arrest data is signified by the color of the data point, which is also explained in the scale to the left
 of the map.  As you can see, most of the marijuana related arrests occurred in clumps throughout the 5 boroughs.</p>
 <div class="steam-graph"></div>
 
-<h3> Demographic Data </h3>
+<h3> Demographic Data of Arrestees </h3>
 <p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include breakdowns of the genders, races, and
 ages of offenders that were arrested for marijuana related charges.</p>
 <div class="demographics"></div>
@@ -383,7 +384,7 @@ var yAxis = d3.svg.axis().scale(yScale).orient("left");
 raceGraph.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);
 raceGraph.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
 raceGraph.append("g").selectAll("bar").data(demodata).enter().append("rect")
-        .style("fill", "green").attr("x", function(d) {return xScale(d.race)+5;})
+        .style("fill", "green").attr("opacity", 0.5).attr("x", function(d) {return xScale(d.race)+5;})
         .attr("width", xScale.rangeBand()-15).attr("y", function(d) {return yScale(d.frequency);})
         .attr("height", function(d) {return height -padding - yScale(d.frequency);});
 
@@ -436,13 +437,17 @@ var yAxis = d3.svg.axis()
 var lineFunction = d3.svg.line()
                           .x(function(d) { return d.x; })
                           .y(function(d) { return d.y; })
-                          .interpolate("basis");
+                          .interpolate("linear");
 
 //Loop through dataset and append points to data array						  
 var lineData = [];
 for (i = 0; i < data.length; i++) {
 		lineData.push({"x":xScale(data[i].date),"y":yScale(data[i].price)});
 	}
+
+lineData.push({"x":1240,"y":yScale(262.695)});
+lineData.push({"x":65.6,"y":yScale(262.695)});
+lineData.push({"x":65.6,"y":yScale(262.695)});
 
 var clipSvg = svgLine.append("defs").append("clipPath")
 				.attr("id", "lineClipPath");
@@ -458,11 +463,11 @@ svgLine.append("path")
                .attr("d", lineFunction(lineData))
                .attr("stroke", "green")
                .attr("stroke-width", 5)
-               .attr("fill", "none")
+               .attr("fill", "green")
 			   .style("opacity", 0.75);
 			   
 svgLine.append("g")
-			  .attr("transform", "translate(0," + (heightL - padding) + ")")
+			  .attr("transform", "translate(0," + (heightL - padding+1) + ")")
               .attr("class", "axis").call(xAxis);
 			  
 svgLine.append("g")
@@ -474,7 +479,14 @@ svgLine.append("text")
 			  .attr("y", 495)
 			  .attr("font-weight", "bold")
 			  .text("Month")
-
+svgLine.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("x", -200)
+        .attr("dy", ".71em")
+		.attr("font-weight", "bold")
+        .style("text-anchor", "end")
+        .text("Price (in $)");
 </script>
 
 <!-- ////////////////////////////////////////// FREQUENCY OF AGES ///////////////////////////////////////////////////-->
@@ -591,8 +603,14 @@ var svgC = d3.select(".arrests-over-time").append("svg")
         .attr("y", 6)
         .attr("x", 0)
         .attr("dy", ".71em")
+		.attr("font-weight", "bold")
         .style("text-anchor", "end")
         .text("Number of Arrests");
+	  svgC.append("text")
+		.attr("x", 1090)
+		.attr("y", 445)
+		.attr("font-weight", "bold")
+		.text("Month")
     var crimeLine = d3.svg.line().x((function(d) { return x(d.date) + margin.left; }))
                                  .y(function(d) { return y(d.frequency); });
     svgC.append("svg:path").attr("d", crimeLine(histdata)).attr("stroke", "green")
