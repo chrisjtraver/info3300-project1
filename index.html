@@ -30,6 +30,7 @@ of the map.  As you can see, most of the marijuana related arrests occurred in c
 <p>The graphs below display demographic data of marijuana related arrests in NYC.  The graphs include breakdowns of the genders, races, and
 ages of offenders that were arrested for marijuana related charges.</p>
 <div class="demographics"></div>
+<div class="age_data"></div>
 
 <h3>Marijuana Prices over Time</h3>
 <p>This graph looks at the trends in the street price of marijuana in New York City from January 1st, 2014 to December 31st, 2014.  There are
@@ -40,7 +41,7 @@ prices data points for each day, however, we displayed the scale on the x-axis b
 <p>This graph looks at the trends in the number of marijuana related arrests in New York City from January 1st, 2014 to December 31st, 2014.</p>
 <div class="arrests-over-time"></div>
 
-<!-- ////////////////////////////////////////// NYC MAP PROJECTION ///////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////// MAP ///////////////////////////////////////////////////-->
 
 <script>
   
@@ -54,8 +55,8 @@ var svg = d3.select(".map").append("svg")
     .attr("height", mapHeight)
 	.attr("class", "map");
 
-  //Map Projection Function
-  d3.json("nyc.json", function(error, nyb) {
+//Map Projection Function
+d3.json("nyc.json", function(error, nyb) {
 
     var projection = d3.geo.mercator()
   					.center([-73.94, 40.70])
@@ -66,7 +67,8 @@ var svg = d3.select(".map").append("svg")
 			.projection(projection);
 
 	var g = svg.append("g");
-
+  
+	//append boroughs to the map, each has seperate ID
 	g.append("g")
 		.attr("class", "boroughs")
 		.selectAll(".state")
@@ -75,9 +77,7 @@ var svg = d3.select(".map").append("svg")
 		.attr("class", function(d){ return "borough-"+d.properties.boroughCode; })
 		.attr("d", path);
 	
-		
-<!-- ////////////////////////////////////////// PLOT CIRCLES ON MAP ///////////////////////////////////////////////////-->
-	
+	//Loop through dataset and plot circles
 	for (i = 0; i < data.length; i++) {
 		var lonlat = [data[i].lon, data[i].lat];
 		var xy = projection(lonlat)
@@ -90,48 +90,40 @@ var svg = d3.select(".map").append("svg")
 		})
 		.attr("stroke", "black")
 	}
-  
-<!-- ////////////////////////////////////////// BOUROUGH LABELS ///////////////////////////////////////////////////-->
 
-//Staten Island
-svg.append("text")
-				.attr("x", "40%")
-				.attr("y", "55%")
-				.attr("class", "map-label")
-				.text("Staten Island")
-
-//Manhattan
-svg.append("text")
-				.attr("x", "45%")
-				.attr("y", "35%")
-				.attr("class", "map-label")
-				.text("Manhattan")
-
-//Bronx
-svg.append("text")
-				.attr("x", "85%")
-				.attr("y", "20%")
-				.attr("class", "map-label")
-				.text("Bronx")
-
-//Queens
-svg.append("text")
-				.attr("x", "90%")
-				.attr("y", "50%")
-				.attr("class", "map-label")
-				.text("Queens")
-				
-//Brooklyn
-svg.append("text")
-				.attr("x", "53%")
-				.attr("y", "80%")
-				.attr("class", "map-label")
-				.text("Brooklyn")
+	//Staten Island
+	svg.append("text")
+					.attr("x", "40%")
+					.attr("y", "55%")
+					.attr("class", "map-label")
+					.text("Staten Island")
+	//Manhattan
+	svg.append("text")
+					.attr("x", "45%")
+					.attr("y", "35%")
+					.attr("class", "map-label")
+					.text("Manhattan")
+	//Bronx
+	svg.append("text")
+					.attr("x", "85%")
+					.attr("y", "20%")
+					.attr("class", "map-label")
+					.text("Bronx")
+	//Queens
+	svg.append("text")
+					.attr("x", "90%")
+					.attr("y", "50%")
+					.attr("class", "map-label")
+					.text("Queens")				
+	//Brooklyn
+	svg.append("text")
+					.attr("x", "53%")
+					.attr("y", "80%")
+					.attr("class", "map-label")
+					.text("Brooklyn")
 });
   
-
-<!-- ////////////////////////////////////////// GRADIENT SCALE ///////////////////////////////////////////////////-->
-
+//Gradient scale attributes
 var gradientHeight = 630;
 var gradientWidth = 30;
 var gradientColors = ["#FFF","#3366ff"];
@@ -144,17 +136,17 @@ var gradientRect = svg.append("defs").append("linearGradient")
     .attr("x2", "0%")
     .attr("y2", "100%")
 
-//Leftmost Color
+//Lowest Color
 gradientRect.append("stop")
     .attr("stop-color", gradientColors[1])
 	.attr("offset", "0%")
 
-//Rightmost Color
+//Highest Color
 gradientRect.append("stop")
     .attr("stop-color", gradientColors[0])
 	.attr("offset", "100%")
 
-//Create Gradient Scale Rectangle
+//Append rectangle
 svg.append("rect")
     .style("fill", "url(#gradientScale)")
 	.attr("x", 200)
@@ -183,9 +175,9 @@ svg.append("text")
 			.style("font-size", 30);
 </script>
 
-<!-- ////////////////////////////////////////// STEAM GRAPH ///////////////////////////////////////////////////-->
+<!-- ////////////////////////////////////////// LOWEST, HIGHEST, AVG PRICE GRAPH ///////////////////////////////////////////////////-->
 
-<!--Code for steam graph goes here-->
+<!--Code goes here-->
 
 <!-- ////////////////////////////////////////// DEMOGRAPHIC CHARTS ///////////////////////////////////////////////////-->
 
@@ -240,7 +232,7 @@ for(var i = 0; i < races.length; i++) {
     race: races[i],
     frequency: raceDataFreq[i]
   });
-  console.log(demodata[i]);
+  //console.log(demodata[i]);
 }
 
 //Set Attributes of Demographic SVG
@@ -439,20 +431,14 @@ var yAxis = d3.svg.axis()
 			  .orient("left")
 			  .ticks(12)
               .tickFormat(d3.format("s"));
-
-/*svgLine.append("rect")
-				.attr("x", padding+5)
-				.attr("y", padding)
-				.attr("width", 1175)
-				.attr("height", height+padding+20)
-				.attr("fill", "lightgreen")*/
 				
 //Function to plot points on curved path
 var lineFunction = d3.svg.line()
                           .x(function(d) { return d.x; })
                           .y(function(d) { return d.y; })
                           .interpolate("basis");
-						  
+
+//Loop through dataset and append points to data array						  
 var lineData = [];
 for (i = 0; i < data.length; i++) {
 		lineData.push({"x":xScale(data[i].date),"y":yScale(data[i].price)});
@@ -489,20 +475,60 @@ svgLine.append("text")
 			  .attr("font-weight", "bold")
 			  .text("Month")
 
-/*svgLine.append("rect")
-				.attr("x", padding)
-				.attr("y", 100)
-				.attr("width", 1200)
-				.attr("height", 1000)
-				.attr("fill", "white")
-				.attr("clip-path", "url(#lineClipPath)")*/
+</script>
 
-var area = d3.svg.area()
-    .x(function(d) { return x(d.date); })
-    .y0(height)
-    .y1(function(d) { return y(d.close); });
+<!-- ////////////////////////////////////////// FREQUENCY OF AGES ///////////////////////////////////////////////////-->
 
-//----------------------------------FREQUENCY OF CRIME---------------------------
+<script>
+//Set width and height of price of time line chart
+var width = 1200;
+var height = 500;
+var padding = 50; 
+var svgAge = d3.select(".age_data").append("svg")
+              .attr("width", width).attr("height", height);
+
+//Scale Functions for age visualization
+var xScaleA = d3.scale.ordinal().domain(["<18", "18-24", "25-34", "35-44", "45-54", "55+"]).rangeBands([50, width-50]);
+var yScaleA = d3.scale.linear().domain([0, 500]).range([height - padding, padding]);
+//Create Axes for age viz
+var xAxisA = d3.svg.axis().scale(xScaleA).orient("bottom");
+var yAxisA = d3.svg.axis().scale(yScaleA).orient("left");
+
+//Draw Axes for age viz
+svgAge.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxisA);
+
+//no. arrests per age group
+var age_data = { "<18": 325, "18-24": 1039, "25-34": 529, "35-44": 190, "45-54": 82, "55+": 21 };
+
+var circles = [325,1039,529,190,82,21]
+var colors = ["#000066","#009999","#663399","#99FF33","#666699","003333"]
+var rscale = d3.scale.linear()
+
+svgAge.selectAll('.circles').data(circles)
+    .enter()
+    .append('circle')
+    .attr('r', function(d){
+      return d/12
+    })
+    .attr('cy', 250)
+    .attr('cx',function(d,i){
+      if(i == 0) {
+        return 145
+      } else {
+        return 145 + (182*i)
+      }
+    })
+    .attr('fill',function(d,i){
+      return colors[i]
+    })
+    .attr('class','circles')
+    .attr('opacity',0.5);
+
+</script>
+
+<!-- ////////////////////////////////////////// FREQUENCY OF ARRESTS ///////////////////////////////////////////////////-->
+
+<script>
 var margin = {
     top: 20,
     right: 20,
@@ -552,7 +578,7 @@ var svgC = d3.select(".arrests-over-time").append("svg")
     y.domain([0, d3.max(histdata, function (d) {
         return d.frequency;
     })]);
-    console.log(histdata);
+    //console.log(histdata);
     svgC.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
