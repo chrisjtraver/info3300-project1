@@ -1,7 +1,7 @@
 INFO 3300 - Project 1 - Cornell University
 ===================
 
-<a href="http://chrisjtraver.github.io/info3300project1">Visualization</a> | <a href="http://chrisjtraver.github.io/info3300project1/written-description.pdf"> Written Description</a>
+<a href="http://chrisjtraver.github.io/info3300-project1">Visualization</a> | <a href="http://chrisjtraver.github.io/info3300-project1/written-description.pdf"> Written Description</a>
 
 For this project we were tasked with  creating a non-interactive data visualization. To do so, we used d3.js, but the final result is
 something that could be published in print or as a static image on a web page.
